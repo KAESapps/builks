@@ -1,0 +1,13 @@
+// Fichier généré automatiquement — ne pas éditer à la main.
+// Variante spécifique $project=projet-a + $platform=desktop.
+// Combinaison : client=<%= client %> project=<%= project %> platform=<%= platform %> env=<%= env %>
+
+import { autoUpdater } from 'electron-updater';
+
+export const API_BASE_URL = "<%= config.apiUrl %>";
+export const APP_NAME = "<%= config.appName %>";
+export const FEATURES = <%- JSON.stringify(config.features) %>;
+
+if (FEATURES.autoUpdate) {
+  autoUpdater.checkForUpdatesAndNotify();
+}

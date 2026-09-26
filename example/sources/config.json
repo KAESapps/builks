@@ -1,0 +1,11 @@
+{
+  "appName": "MyApp",
+  "apiUrl": "https://api.example.com",
+  "features": {
+    "analytics": false,
+    "autoUpdate": false
+  },
+  "branding": {
+    "color": "#333333"
+  }
+}

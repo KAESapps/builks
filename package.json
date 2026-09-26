@@ -1,0 +1,16 @@
+{
+  "name": "build-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Générateur de dossiers de build (config + assets + code) à partir de sources multi-dimensionnelles (client, projet, plateforme, environnement) avec résolution par spécificité.",
+  "type": "commonjs",
+  "bin": {
+    "build-generator": "src/generate.js"
+  },
+  "scripts": {
+    "demo": "node src/generate.js --sourcesRoot=ksap/src --out=dist/cnb-mobile --owner=apinfor --client=cnb --projet=demo --app=mobile --env=dev"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10"
+  }
+}
