@@ -1,4 +1,4 @@
-# build-generator
+# builks
 
 Génère un dossier de build (config + assets + code) à partir de sources
 organisées selon plusieurs dimensions orthogonales (client, projet,
