@@ -47,6 +47,15 @@ function main() {
     target[key] = value;
   }
 
+  for (const [key, value] of Object.entries(target)) {
+    if (value.split("/").some((segment) => segment.length === 0)) {
+      throw new Error(
+        `Valeur invalide pour "--${key}" : un chemin hiérarchique doit contenir ` +
+          `des segments non vides séparés par "/".`,
+      );
+    }
+  }
+
   // Avertissements non bloquants : aide au diagnostic de typos, sans jamais échouer.
   for (const key of Object.keys(target)) {
     if (!dimensions.includes(key)) {

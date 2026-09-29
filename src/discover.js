@@ -66,9 +66,16 @@ function discoverRules(sourcesRoot) {
       if (!match) continue; // dossier hors convention : ignoré silencieusement
       const [, tag, value] = match;
       dimensions.add(tag);
+      const nextWhen = { ...when };
+      if (Object.hasOwn(when, tag)) {
+        const previous = Array.isArray(when[tag]) ? when[tag] : [when[tag]];
+        nextWhen[tag] = [...previous, value];
+      } else {
+        nextWhen[tag] = value;
+      }
       walk(
         path.join(dir, entry.name),
-        { ...when, [tag]: value },
+        nextWhen,
         relPath ? `${relPath}/${entry.name}` : entry.name,
       );
     }

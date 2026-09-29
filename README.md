@@ -66,10 +66,17 @@ sources/
       config.json
       templates/api-client.js.ejs  # template structurellement différent
 
-    $client=acme/                  # une autre branche, nichée différemment
-      $platform=desktop/
-        $env=prod/                 # 4 dimensions, réglage très ciblé
-          config.json
+  $project=programme-a/
+    config.json                    # projet parent : commun à ses descendants
+    $project=application-mobile/
+      config.json                  # sous-projet : surcharge le parent
+      $project=ios/
+        config.json                # niveau encore plus spécifique
+
+  $client=acme/                    # une autre dimension indépendante
+    $platform=desktop/
+      $env=prod/                   # 3 dimensions, réglage très ciblé
+        config.json
 ```
 
 Règles de la convention :
@@ -77,9 +84,15 @@ Règles de la convention :
 - Un dossier nommé `$tag=value` ajoute une contrainte à la combinaison
   accumulée depuis la racine (tout avant le premier `=` est le nom de la
   dimension, tout après est la valeur).
+- Répéter un même tag le long d'une branche crée une hiérarchie pour cette
+  dimension. Par exemple `$project=programme-a/$project=application-mobile`
+  décrit un sous-projet. La cible CLI donne le chemin complet avec `/` :
+  `--project=programme-a/application-mobile`. Les segments sont comparés
+  séparément, et les règles d'un ancêtre s'appliquent à ses descendants.
 - Dès qu'un dossier contient `config.json`, `assets/` ou `templates/`, il
-  devient une règle. Sa **spécificité** = nombre de contraintes `dim=valeur`
-  accumulées entre la racine et lui.
+  devient une règle. Sa **spécificité** = nombre total de segments de
+  contraintes accumulés entre la racine et lui. Ainsi, un enfant est plus
+  spécifique que son parent.
 - **L'imbrication n'a pas besoin d'être uniforme** : `$project=projet-a/$platform=desktop`
   et `$client=acme/$project=projet-a/$platform=desktop/$env=prod` sont deux
   branches indépendantes de l'arbre ; seul l'ensemble des contraintes
@@ -106,6 +119,13 @@ Règles de la convention :
    fichier de sortie, la génération **échoue avec une erreur explicite**
    plutôt que de deviner — sauf si l'une des règles porte un `priority` plus
    élevé (voir ci-dessous).
+
+Une hiérarchie et une dimension orthogonale peuvent produire la même
+spécificité, par exemple une règle sur `programme-a/application-mobile`
+(2 segments de projet) et une règle sur `programme-a` + `platform=ios`
+(1 segment de projet + 1 de plateforme). Elles sont alors considérées comme
+des règles de même niveau : un conflit sur une même clé ou destination doit
+être résolu avec `priority` ou en réorganisant les règles.
 
 ## Départager un conflit : `meta.json`
 
